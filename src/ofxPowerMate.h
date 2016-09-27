@@ -29,6 +29,8 @@ public:
     void update(ofEventArgs & arg);
     
     void setBrillo(int brillo);
+	void setPulse(bool enabled);
+	void setPulseSpeed(int speed); // [-32, 64]
     
     ofEvent<powerData> tengoInfo;
 private:

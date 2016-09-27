@@ -40,23 +40,58 @@ void ofxPowerMate::conecta(){
 
 }
 
+void ofxPowerMate::setPulse(bool enabled) {
+	unsigned char bufBrillo[9];
+	bufBrillo[0] = 0x00;
+	bufBrillo[1] = 0x41;
+	bufBrillo[2] = 0x01;
+	bufBrillo[3] = 0x03;	// command type
+	bufBrillo[4] = 0x00;	// select table
+	bufBrillo[5] = (unsigned char)(enabled ? 0x01 : 0x00);
+	bufBrillo[6] = 0x00;
+	bufBrillo[7] = 0x00;
+	bufBrillo[8] = 0x00;
+	res = hid_send_feature_report(handle, bufBrillo, sizeof(bufBrillo));
+
+}
+
+void ofxPowerMate::setPulseSpeed(int speed){
+
+	unsigned char bufBrillo[9];
+	bufBrillo[0] = 0x00;
+	bufBrillo[1] = 0x41;
+	bufBrillo[2] = 0x01;
+	bufBrillo[3] = 0x04;	// command type
+	bufBrillo[4] = 0x00;	// select table
+
+	if (speed < 0){
+		bufBrillo[5] = 0;
+		bufBrillo[6] = (unsigned char)(-speed);
+	}else if (speed == 0){
+		bufBrillo[5] = 1;
+		bufBrillo[6] = 0;
+	}else{ // speed > 0
+		bufBrillo[5] = 2;
+		bufBrillo[6] = (unsigned char)(speed);
+	}
+	bufBrillo[7] = 0x00;
+	bufBrillo[8] = 0x00;
+	res = hid_send_feature_report(handle, bufBrillo, sizeof(bufBrillo));
+
+
+}
+
 //--------------------------------------------------------------
 void ofxPowerMate::setBrillo(int brillo){
     // valor entre 0 - 255 ¿?¿
     //hid_set_nonblocking(handle, 1);
-    unsigned char bufBrillo[8];
-    bufBrillo[0] = 0x41;
-    bufBrillo[1] = 0x01;
-    bufBrillo[2] = 0x01;
-    bufBrillo[3] = 0x00;	// command type
-    bufBrillo[4] = brillo;	// select table
-    bufBrillo[5] = 0x00;
-     bufBrillo[6] = 0x00;
-     bufBrillo[7] = 0x00;
+    unsigned char bufBrillo[2];
+    bufBrillo[0] = 0x00;
+    bufBrillo[1] = brillo;
     res = hid_send_feature_report(handle, bufBrillo, sizeof(bufBrillo));
     
     
-    //res = hid_write(handle, buf, bufbuf);
+   //res = hid_write(handle, buf, bufbuf);
     
 }
 
