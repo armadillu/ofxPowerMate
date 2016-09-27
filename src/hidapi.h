@@ -11,7 +11,7 @@
 
  At the discretion of the user of this library,
  this software may be licensed under the terms of the
- GNU Public License v3, a BSD-Style license, or the
+ GNU General Public License v3, a BSD-Style license, or the
  original HIDAPI license as outlined in the LICENSE.txt,
  LICENSE-gpl3.txt, LICENSE-bsd.txt, and LICENSE-orig.txt
  files located at the root of the source distribution.
@@ -112,6 +112,8 @@ extern "C" {
 
 			This function returns a linked list of all the HID devices
 			attached to the system which match vendor_id and product_id.
+			If @p vendor_id is set to 0 then any vendor matches.
+			If @p product_id is set to 0 then any product matches.
 			If @p vendor_id and @p product_id are both set to 0, then
 			all HID devices will be returned.
 
