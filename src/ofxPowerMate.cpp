@@ -25,22 +25,25 @@ ofxPowerMate::~ofxPowerMate(){
 }
 
 //--------------------------------------------------------------
-void ofxPowerMate::conecta(){
+bool ofxPowerMate::conecta(){
     
     // Open the device using the VID, PID,
     // and optionally the Serial number.
     handle = hid_open(0x077d, 0x0410, NULL);
-    
-    // Read the Manufacturer String
-    res = hid_get_manufacturer_string(handle, wstr, 6);
-    printf("Manufacturer String: %ls\n", wstr);
-    
-    // Set the hid_read() function to be non-blocking.
-    hid_set_nonblocking(handle, 1);
+	if (handle) {
+		// Read the Manufacturer String
+		res = hid_get_manufacturer_string(handle, wstr, 6);
+		printf("Manufacturer String: %ls\n", wstr);
 
+		// Set the hid_read() function to be non-blocking.
+		hid_set_nonblocking(handle, 1);
+		return true;
+	}
+	return false;
 }
 
 void ofxPowerMate::setPulse(bool enabled) {
+	if (!handle) return;
 	unsigned char bufBrillo[9];
 	bufBrillo[0] = 0x00;
 	bufBrillo[1] = 0x41;
@@ -56,7 +59,7 @@ void ofxPowerMate::setPulse(bool enabled) {
 }
 
 void ofxPowerMate::setPulseSpeed(int speed){
-
+	if (!handle) return;
 	unsigned char bufBrillo[9];
 	bufBrillo[0] = 0x00;
 	bufBrillo[1] = 0x41;
@@ -83,6 +86,7 @@ void ofxPowerMate::setPulseSpeed(int speed){
 
 //--------------------------------------------------------------
 void ofxPowerMate::setBrillo(int brillo){
+	if (!handle) return;
     // valor entre 0 - 255 ¿?¿
     //hid_set_nonblocking(handle, 1);
     unsigned char bufBrillo[2];
@@ -98,6 +102,8 @@ void ofxPowerMate::setBrillo(int brillo){
 
 //--------------------------------------------------------------
 void ofxPowerMate::update(ofEventArgs & arg){
+
+	if (!handle) return;
 
     res = hid_read(handle, buf,  sizeof(buf));
    

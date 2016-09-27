@@ -12,37 +12,38 @@
 #include "ofMain.h"
 #include "hidapi.h"
 
-class powerData {
-    
-public:
-    int direccion;
-    int presionado;
-};
-
 class ofxPowerMate {
     
 public:
+
+	struct EventData{
+		int direccion;
+		int presionado;
+	};
+
     ofxPowerMate();
     ~ofxPowerMate();
     
-    void conecta();
+    bool conecta();
     void update(ofEventArgs & arg);
+
+	bool connected() { return handle != NULL; }
     
     void setBrillo(int brillo);
 	void setPulse(bool enabled);
 	void setPulseSpeed(int speed); // [-32, 64]
     
-    ofEvent<powerData> tengoInfo;
+    ofEvent<EventData> tengoInfo;
+
 private:
-    
-   
+  
     wchar_t wstr[256];
     unsigned char buf[7];
     int res;
-    hid_device *handle;
+    hid_device *handle = NULL;
 
     float elapsed;
-    powerData data;
+	EventData data;
 };
 
 #endif /* defined(__example_simple__ofxPowerMate__) */
